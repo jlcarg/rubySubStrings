@@ -1,7 +1,7 @@
 dictionary = ["below","down","go","going","horn","how","howdy","it","i","low","own","part","partner","sit"]
 
-def substrings(string, dictionary)
-  possible_substrings = separate_possible_substrings string
+def substrings(phrase, dictionary)
+  possible_substrings = get_phrase_substrings(phrase)
   substring_count = possible_substrings.reduce(Hash.new(0)) do |hash, substring|
     if dictionary.include?(substring)
       hash[substring] += 1
@@ -13,12 +13,21 @@ def substrings(string, dictionary)
   puts substring_count
 end
 
-def separate_possible_substrings(string)
-  string_into_array = string.split ("")
-  number_of_letters = string_into_array.size
+def get_phrase_substrings(phrase)
+  arr_of_words = phrase.split(" ")
+  all_possible_subs = arr_of_words.reduce([]) do |arr, word|
+    arr << get_word_substrings(word)
+    arr
+  end
+  all_possible_subs.flatten
+end
+
+def get_word_substrings(string)
+  string_into_array = string.downcase.split("")
+  number_of_letters = string_into_array.length
   possible_substrings = []
   string_into_array.each_with_index do |letter, i|
-    (i..number_of_letters).each do |j|
+    (0..number_of_letters).each do |j|
       unless string_into_array[i, j] == [] || possible_substrings.include?(string_into_array[i, j].join(""))
         possible_substrings << string_into_array[i, j].join("")
       end
@@ -27,5 +36,5 @@ def separate_possible_substrings(string)
   possible_substrings
 end
 
+substrings("Howdy partner, sit down! How's it going?", dictionary)
 substrings("below", dictionary)
-# separate_possible_substrings("Howdy partner, sit down! How's it going?")
